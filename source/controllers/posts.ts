@@ -10,6 +10,27 @@ interface Post {
   body: String;
 }
 
+interface EventData {
+  id: string;
+  date: Date;
+  creator: string;
+  name: string;
+  route: string;
+  likedBy: Array<string>;
+  participants: Array<string>;
+  routeCoordinates: Array<string>;
+  // Voeg andere velden toe op basis van je vereisten
+}
+
+interface UserData {
+  address: string;
+  email: Date;
+  fullName: string;
+  phoneNumber: string;
+  userID: string;
+  // Voeg andere velden toe op basis van je vereisten
+}
+
 // Initialize Firebase Admin SDK
 const serviceAccount = require("../../tender-app-ab614-firebase-adminsdk-fpe2i-a30fc17b3f.json"); // Path to the downloaded JSON file
 admin.initializeApp({
@@ -34,49 +55,80 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
 
 // getting all events
 const getEvents = async (req: Request, res: Response, next: NextFunction) => {
-  // Example: Get documents from Firestore
   try {
     const collectionRef = firestore.collection("events");
     const snapshot = await collectionRef.get();
 
     if (snapshot.empty) {
       console.log("No documents found.");
-      return;
+      return res.status(200).json({
+        message: "No documents found.",
+      });
     }
 
+    const filteredEvents: EventData[] = [];
+
     snapshot.forEach((doc) => {
-      console.log("Document data:", doc.id, doc.data());
+      console.log("Document data:", doc.data());
+      const eventData = {
+        id: doc.id,
+        date: doc.get("date").toDate(),
+        creator: doc.get("creatorName") || "N/A",
+        name: doc.get("name") || "N/A",
+        route: doc.get("route") || "N/A",
+        likedBy: doc.get("likedBy") || "N/A",
+        participants: doc.get("participants") || "N/A",
+        routeCoordinates: doc.get("routeCoordinates") || "N/A",
+      };
+      filteredEvents.push(eventData);
     });
 
     return res.status(200).json({
-      message: snapshot,
+      events: filteredEvents,
     });
   } catch (error) {
     console.error("Error getting documents:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
 };
 
 // getting all users
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
-  // Example: Get documents from Firestore
   try {
     const collectionRef = firestore.collection("users");
     const snapshot = await collectionRef.get();
 
     if (snapshot.empty) {
       console.log("No documents found.");
-      return;
+      return res.status(200).json({
+        message: "No documents found.",
+      });
     }
 
+    const filteredUsers: UserData[] = [];
+
     snapshot.forEach((doc) => {
-      console.log("Document data:", doc.id, doc.data());
+      console.log("Document data:", doc.data());
+      const userData = {
+        address: doc.get("address") || "N/A",
+        email: doc.get("email") || "N/A",
+        fullName: doc.get("fullName") || "N/A",
+        phoneNumber: doc.get("phoneNumber") || "N/A",
+        userID: doc.get("userID") || "N/A",
+      };
+      filteredUsers.push(userData);
     });
 
     return res.status(200).json({
-      message: snapshot,
+      users: filteredUsers,
     });
   } catch (error) {
     console.error("Error getting documents:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
 };
 
