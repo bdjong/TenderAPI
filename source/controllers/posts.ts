@@ -41,18 +41,6 @@ admin.initializeApp({
 // Get a reference to Firestore
 const firestore = admin.firestore();
 
-// getting all posts
-const getPosts = async (req: Request, res: Response, next: NextFunction) => {
-  // get some posts
-  let result: AxiosResponse = await axios.get(
-    `https://jsonplaceholder.typicode.com/posts`
-  );
-  let posts: [Post] = result.data;
-  return res.status(200).json({
-    message: posts,
-  });
-};
-
 // getting all events
 const getEvents = async (req: Request, res: Response, next: NextFunction) => {
   try {
