@@ -19,7 +19,6 @@ interface EventData {
   likedBy: Array<string>;
   participants: Array<string>;
   routeCoordinates: Array<string>;
-  // Voeg andere velden toe op basis van je vereisten
 }
 
 interface UserData {
@@ -28,14 +27,13 @@ interface UserData {
   fullName: string;
   phoneNumber: string;
   userID: string;
-  // Voeg andere velden toe op basis van je vereisten
 }
 
 // Initialize Firebase Admin SDK
-const serviceAccount = require("../../tender-app-ab614-firebase-adminsdk-fpe2i-a30fc17b3f.json"); // Path to the downloaded JSON file
+const serviceAccount = require("../../tender-app-ab614-firebase-adminsdk-fpe2i-a30fc17b3f.json"); // Path to the JSON file which holds the credentials
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://tender-app-ab614.firebaseio.com", // Replace with your Firebase project URL
+  databaseURL: "https://tender-app-ab614.firebaseio.com",
 });
 
 // Get a reference to Firestore
@@ -121,7 +119,6 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default {
-  getPosts,
   getEvents,
   getUsers,
 };
